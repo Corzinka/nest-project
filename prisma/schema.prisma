@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["main"]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cls_experience {
+  id           String      @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id_profile   String      @db.Uuid
+  company      String
+  position     String
+  period_start DateTime    @db.Timestamptz(6)
+  period_end   DateTime?   @db.Timestamptz(6)
+  achievements String?
+  time_create  DateTime    @default(now()) @db.Timestamptz(6)
+  id_user      String?     @db.Uuid
+  is_deleted   Boolean     @default(false)
+  cls_profile  cls_profile @relation(fields: [id_profile], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cls_experience_cls_profile_fk")
+
+  @@schema("main")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cls_link {
+  id          String      @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id_profile  String      @db.Uuid
+  name        String
+  description String?
+  link        String
+  time_create DateTime    @default(now()) @db.Timestamptz(6)
+  id_user     String?     @db.Uuid
+  is_deleted  Boolean     @default(false)
+  cls_profile cls_profile @relation(fields: [id_profile], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cls_link_cls_profile_fk")
+
+  @@schema("main")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cls_profile {
+  id             String           @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  first_name     String
+  patronymic     String?
+  last_name      String
+  description    String?
+  time_create    DateTime         @default(now()) @db.Timestamptz(6)
+  id_user        String?          @db.Uuid
+  is_deleted     Boolean          @default(false)
+  cls_experience cls_experience[]
+  cls_link       cls_link[]
+  cls_project    cls_project[]
+  cls_skill      cls_skill[]
+
+  @@schema("main")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cls_project {
+  id          String      @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id_profile  String      @db.Uuid
+  name        String
+  link        String
+  time_create DateTime    @default(now()) @db.Timestamptz(6)
+  id_user     String?     @db.Uuid
+  is_deleted  Boolean     @default(false)
+  cls_profile cls_profile @relation(fields: [id_profile], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cls_project_cls_profile_fk")
+
+  @@schema("main")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cls_skill {
+  id          String      @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id_profile  String      @db.Uuid
+  name        String
+  time_create DateTime    @default(now()) @db.Timestamptz(6)
+  id_user     String?     @db.Uuid
+  is_deleted  Boolean     @default(false)
+  cls_profile cls_profile @relation(fields: [id_profile], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cls_skill_cls_profile_fk")
+
+  @@schema("main")
+}
