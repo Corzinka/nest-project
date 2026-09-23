@@ -1,0 +1,71 @@
+services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: nest-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: nestdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nestdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  flyway:
+    image: flyway/flyway:latest
+    container_name: nest-flyway
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ./db/migrations:/flyway/sql:ro
+
+    command:
+      - -url=jdbc:postgresql://postgres:5432/nestdb
+      - -user=postgres
+      - -password=postgres
+      - migrate
+
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: nest-api
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
+
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/nestdb
+
+      OBSERVE_APP_KEY: ${OBSERVE_APP_KEY}
+      OBSERVE_APP_SECRET: ${OBSERVE_APP_SECRET}
+      OBSERVE_SERVICE_ID: ${OBSERVE_SERVICE_ID}
+
+    ports:
+      - "3000:3000"
+
+
+volumes:
+  postgres_data:

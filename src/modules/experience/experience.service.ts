@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service.js';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { UpdateExperienceInput } from './dto/update-experience.input.js';
 import { CreateExperienceInput } from './dto/create-experience.input.js';
 
@@ -24,7 +24,7 @@ export class ExperienceService {
     }
 
     create(input: CreateExperienceInput[]) {
-        return this.prismService.cls_experience.createMany({
+        return this.prismService.cls_experience.createManyAndReturn({
             data: input,
         })
     }

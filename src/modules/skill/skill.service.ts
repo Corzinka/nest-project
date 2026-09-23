@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service.js';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { UpdateSkillInput } from './dto/update-skill.input.js';
 import { CreateSkillInput } from './dto/create-skill.input.js';
 
@@ -24,7 +24,7 @@ export class SkillService {
     }
 
     create(input: CreateSkillInput[]) {
-        return this.prismService.cls_skill.createMany({
+        return this.prismService.cls_skill.createManyAndReturn({
             data: input,
         });
     }

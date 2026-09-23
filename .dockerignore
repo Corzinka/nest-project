@@ -1,0 +1,19 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore build output
+dist
+
+# Ignore environment variable files
+.env
+.env.*
+
+# Ignore IDE specific files
+.vscode
+
+# Ignore Dockerfile and docker-compose.yml for local development
+Dockerfile
+docker-compose.yml
+
+.git
+.gitignore

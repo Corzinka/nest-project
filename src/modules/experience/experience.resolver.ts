@@ -2,7 +2,6 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ExperienceService } from './experience.service.js';
 import { Experience } from './dto/experience.object.js';
 import { UpdateExperienceInput } from './dto/update-experience.input.js';
-import { CreateResult } from '../../common/create-result.object.js';
 import { CreateExperienceInput } from './dto/create-experience.input.js';
 
 @Resolver(() => Experience)
@@ -21,7 +20,7 @@ export class ExperienceResolver {
         return this.experienceService.findById(id);
     }
 
-    @Mutation(() => CreateResult)
+    @Mutation(() => [Experience])
     createExperiences(
         @Args('input', { type: () => [CreateExperienceInput] }) input: CreateExperienceInput[]
     ) {

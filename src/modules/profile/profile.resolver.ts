@@ -10,7 +10,6 @@ import { ExperienceService } from '../experience/experience.service.js';
 import { Project } from '../project/dto/project.object.js';
 import { ProjectService } from '../project/project.service.js';
 import { UpdateProfileInput } from './dto/update-profile.input.js';
-import { CreateResult } from '../../common/create-result.object.js';
 import { CreateProfileInput } from './dto/create-profile.input.js';
 
 @Resolver(() => Profile)
@@ -35,7 +34,7 @@ export class ProfileResolver {
         return this.profileService.findById(id);
     }
 
-    @Mutation(() => CreateResult)
+    @Mutation(() => [Profile])
     createProfile(
         @Args('input', { type: () => [CreateProfileInput] }) input: CreateProfileInput[]
     ) {

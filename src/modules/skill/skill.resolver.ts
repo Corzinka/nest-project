@@ -2,7 +2,6 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SkillService } from './skill.service.js';
 import { Skill } from './dto/skill.object.js';
 import { UpdateSkillInput } from './dto/update-skill.input.js';
-import { CreateResult } from '../../common/create-result.object.js';
 import { CreateSkillInput } from './dto/create-skill.input.js';
 
 @Resolver(() => Skill)
@@ -21,7 +20,7 @@ export class SkillResolver {
         return this.skillService.findById(id);
     }
 
-    @Mutation(() => CreateResult)
+    @Mutation(() => [Skill])
     createSkill(
         @Args('input', { type: () => [CreateSkillInput] }) input: CreateSkillInput[]
     ) {

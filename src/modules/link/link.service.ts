@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service.js';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { UpdateLinkInput } from './dto/update-link.input.js';
 import { CreateLinkInput } from './dto/create-link.input.js';
 
@@ -24,7 +24,7 @@ export class LinkService {
     }
 
     create(input: CreateLinkInput[]) {
-        return this.prismService.cls_link.createMany({
+        return this.prismService.cls_link.createManyAndReturn({
             data: input,
         })
     }

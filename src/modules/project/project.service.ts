@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service.js';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service.js';
 import { UpdateProjectInput } from './dto/update-project.input.js';
 import { CreateProjectInput } from './dto/create-project.input.js';
 
@@ -24,7 +24,7 @@ export class ProjectService {
     }
 
     create(input: CreateProjectInput[]) {
-        return this.prismService.cls_project.createMany({
+        return this.prismService.cls_project.createManyAndReturn({
             data: input,
         });
     }

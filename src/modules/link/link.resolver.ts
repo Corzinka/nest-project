@@ -2,7 +2,6 @@ import { Args, Mutation, ID, Query, Resolver } from '@nestjs/graphql';
 import { LinkService } from './link.service.js';
 import { Link } from './dto/link.object.js';
 import { UpdateLinkInput } from './dto/update-link.input.js';
-import { CreateResult } from '../../common/create-result.object.js';
 import { CreateLinkInput } from './dto/create-link.input.js';
 
 @Resolver(() => Link)
@@ -21,7 +20,7 @@ export class LinkResolver {
         return this.linkService.findById(id);
     }
 
-    @Mutation(() => CreateResult)
+    @Mutation(() => [Link])
     createLink(
         @Args('input', { type: () => [CreateLinkInput] }) input: CreateLinkInput[]
     ) {

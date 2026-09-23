@@ -5,11 +5,12 @@ import { AppService } from './app.service.js';
 import { ProfileModule } from './modules/profile/profile.module.js';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LinkModule } from './modules/link/link.module.js';
 import { SkillModule } from './modules/skill/skill.module.js';
 import { ProjectModule } from './modules/project/project.module.js';
 import { ExperienceModule } from './modules/experience/experience.module.js';
+import { PrismaModule } from './infrastructure/prisma/prisma.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -17,16 +18,23 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   imports: [
     // Distributed tracing, auto-correlated logs, request/job metrics, error
     // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ConfigModule.forRoot(),
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'nest-project',
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ObserveModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        appKey: configService.getOrThrow<string>('OBSERVE_APP_KEY'),
+        appSecret: configService.getOrThrow<string>('OBSERVE_APP_SECRET'),
+        serviceId: configService.getOrThrow<string>('OBSERVE_SERVICE_ID'),
+      }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({ 
       driver: ApolloDriver,
-      autoSchemaFile: 'src/schema.gql',
+      autoSchemaFile: true,
     }),
+    PrismaModule,
     ProfileModule,
     LinkModule,
     SkillModule,
