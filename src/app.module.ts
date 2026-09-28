@@ -33,6 +33,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     GraphQLModule.forRoot<ApolloDriverConfig>({ 
       driver: ApolloDriver,
       autoSchemaFile: true,
+      playground: true,
     }),
     PrismaModule,
     ProfileModule,

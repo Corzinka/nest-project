@@ -1,20 +1,20 @@
 services:
 
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18
     container_name: nest-postgres
     restart: unless-stopped
 
     environment:
-      POSTGRES_DB: nestdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
     ports:
       - "5432:5432"
 
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d nestdb"]
@@ -35,9 +35,10 @@ services:
       - ./db/migrations:/flyway/sql:ro
 
     command:
-      - -url=jdbc:postgresql://postgres:5432/nestdb
-      - -user=postgres
-      - -password=postgres
+      - -url=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - -user=${POSTGRES_USER}
+      - -password=${POSTGRES_PASSWORD}
+      - -schemas=main
       - migrate
 
 
