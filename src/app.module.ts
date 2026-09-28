@@ -34,6 +34,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      introspection: true,
     }),
     PrismaModule,
     ProfileModule,
